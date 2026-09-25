@@ -373,8 +373,10 @@
 "settings.toggle.iosFrameworks" = "强制插入iOS框架";
 "settings.info.alias" = "别名:";
 "settings.toggle.enableScrollWheel.help" = "在按键映射启用滚轮";
+"settings.toggle.disableBuiltinKeyboard.help" = "对应用隐藏键盘，以避免 macOS 将键盘模拟为手柄时把游戏切回触屏界面。";
 "settings.toggle.iosFrameworks.help" = "将系统 ios 库添加到应用程序中。已知可修复某些应用程序找不到 ios 框架的问题";
 "settings.toggle.enableScrollWheel" = "启用滚轮";
+"settings.toggle.disableBuiltinKeyboard" = "禁用内置键盘支持";
 "ipaLibrary.info.notAvailable" = "此应用链接不可用";
 "ipaLibrary.info" = "应用信息";
 "ipaLibrary.info.checksum.none" = "未提供";

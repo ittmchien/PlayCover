@@ -250,8 +250,10 @@
 "settings.toggle.iosFrameworks" = "افزودن اجباری فریمورک های iOS";
 "settings.info.alias" = "نام مستعار:";
 "settings.toggle.enableScrollWheel.help" = "فعالسازی پیمایش در نقشه کلید";
+"settings.toggle.disableBuiltinKeyboard.help" = "صفحه‌کلید را از دید برنامه پنهان می‌کند تا شبیه‌سازی صفحه‌کلید به‌عنوان کنترلر در macOS باعث بازگشت بازی به رابط لمسی نشود.";
 "settings.toggle.iosFrameworks.help" = "افزودن کتابخانه های سیستمی iOS به برنامه، برای رفع مشکل برخی از برنامه ها که نمیتوانند کتابخانه های iOS را پیدا کنند";
 "settings.toggle.enableScrollWheel" = "فعال سازی اسکرول";
+"settings.toggle.disableBuiltinKeyboard" = "غیرفعال‌سازی پشتیبانی داخلی صفحه‌کلید";
 "ipaLibrary.info" = "اطلاعات برنامه";
 "ipaLibrary.info.notAvailable" = "پیوند برای این برنامه معتبر نیست";
 "ipaLibrary.info.checksum.none" = "ارائه نشده است";

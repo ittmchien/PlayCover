@@ -373,8 +373,10 @@
 "settings.toggle.iosFrameworks" = "iOS 프레임워크 강제 삽입";
 "settings.info.alias" = "별명:";
 "settings.toggle.enableScrollWheel.help" = "키매핑에서 스크롤 휠 사용";
+"settings.toggle.disableBuiltinKeyboard.help" = "macOS의 키보드를 컨트롤러로 에뮬레이션하는 기능이 게임을 터치 UI로 되돌리지 않도록 앱에서 키보드를 숨깁니다.";
 "settings.toggle.iosFrameworks.help" = "앱에 시스템 iOS 라이브러리를 추가합니다. iOS 프레임워크를 찾을 수 없는 일부 앱의 문제를 해결합니다";
 "settings.toggle.enableScrollWheel" = "스크롤 휠 사용";
+"settings.toggle.disableBuiltinKeyboard" = "내장 키보드 지원 비활성화";
 "ipaLibrary.info" = "App Info";
 "ipaLibrary.info.notAvailable" = "Link not valid for this app";
 "ipaLibrary.info.checksum.none" = "None provided";

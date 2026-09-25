@@ -180,6 +180,7 @@
 "settings.noPlayTools" = "PlayTools is not installed in this app";
 "settings.button.discord" = "Custom Discord activity";
 "settings.toggle.enableScrollWheel.help" = "Enable scroll wheel in keymapping";
+"settings.toggle.disableBuiltinKeyboard.help" = "Hide the keyboard from the app so macOS keyboard-as-controller emulation does not switch the game back to touch UI.";
 "preferences.prune.alert" = "Are you sure you want to prune all files?";
 "playapp.deleteMessage" = "Are you sure you want to uninstall %@?";
 "settings.text.detectedResolution" = "Detected Resolution:";
@@ -234,6 +235,7 @@
 "configSigning.subtext" = "Package Signing helps fixing issues with apps that rely on \ncorrect Team IDs for operations like authorization. \nThere may be security risks associated with enabling this feature.\n\n As such, we recommend disabling it when it's not necessary";
 "button.Yes" = "Yes";
 "settings.toggle.enableScrollWheel" = "Enable Scroll Wheel";
+"settings.toggle.disableBuiltinKeyboard" = "Disable Built-in Keyboard Support";
 "alert.moveAppToApplications.title" = "Move to Applications folder?";
 "configSigning.step.AMFIreboot" = "AMFI Disabled. Please reboot";
 "preferences.textfield.url" = "Source URL...";

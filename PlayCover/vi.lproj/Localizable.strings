@@ -250,8 +250,10 @@
 "settings.toggle.iosFrameworks" = "Force Insert iOS Frameworks";
 "settings.info.alias" = "Alias:";
 "settings.toggle.enableScrollWheel.help" = "Enable scroll wheel in keymapping";
+"settings.toggle.disableBuiltinKeyboard.help" = "Ẩn bàn phím khỏi ứng dụng để tính năng mô phỏng bàn phím thành tay cầm của macOS không chuyển game về giao diện chạm.";
 "settings.toggle.iosFrameworks.help" = "Add the system ios libraries to the app. Known to fix issues with some apps cannot find ios framework";
 "settings.toggle.enableScrollWheel" = "Enable Scroll Wheel";
+"settings.toggle.disableBuiltinKeyboard" = "Tắt hỗ trợ bàn phím tích hợp";
 "ipaLibrary.info.notAvailable" = "Liên kết không hợp lệ cho ứng dụng này";
 "ipaLibrary.info" = "Thông tin Ứng dụng";
 "ipaLibrary.info.checksum.none" = "None provided";

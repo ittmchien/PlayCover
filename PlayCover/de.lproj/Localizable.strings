@@ -373,8 +373,10 @@
 "settings.toggle.iosFrameworks" = "Das Einfügen von iOS-Frameworks erzwingen";
 "settings.info.alias" = "Alias:";
 "settings.toggle.enableScrollWheel.help" = "Scrollrad in Keymapping aktivieren";
+"settings.toggle.disableBuiltinKeyboard.help" = "Blendet die Tastatur vor der App aus, damit die macOS-Emulation „Tastatur als Controller“ das Spiel nicht zur Touch-Oberfläche zurückschaltet.";
 "settings.toggle.iosFrameworks.help" = "Füge der App die System-ios-Bibliotheken hinzu. Es ist bekannt, dass Probleme behoben werden, bei denen einige Apps das ios-Framework nicht finden können";
 "settings.toggle.enableScrollWheel" = "Scrollrad aktivieren";
+"settings.toggle.disableBuiltinKeyboard" = "Integrierte Tastaturunterstützung deaktivieren";
 "ipaLibrary.info.notAvailable" = "Link nicht gültig für diese App";
 "ipaLibrary.info" = "App-Info";
 "ipaLibrary.info.checksum.none" = "Keine Angabe";

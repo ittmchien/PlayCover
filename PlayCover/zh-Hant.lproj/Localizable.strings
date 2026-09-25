@@ -353,8 +353,10 @@
 "settings.toggle.iosFrameworks" = "強制插入 iOS 框架";
 "settings.info.alias" = "別名：";
 "settings.toggle.enableScrollWheel.help" = "在鍵盤映射中啟用滾輪";
+"settings.toggle.disableBuiltinKeyboard.help" = "對應用程式隱藏鍵盤，避免 macOS 將鍵盤模擬為控制器時把遊戲切回觸控介面。";
 "settings.toggle.iosFrameworks.help" = "將系統 ios 庫新增至應用程式。 已知修復某些應用程式找不到 ios 框架的問題";
 "settings.toggle.enableScrollWheel" = "啟用滾輪";
+"settings.toggle.disableBuiltinKeyboard" = "停用內建鍵盤支援";
 "ipaLibrary.info.notAvailable" = "Link not valid for this app";
 "ipaLibrary.info" = "App Info";
 "ipaLibrary.info.checksum.none" = "None provided";

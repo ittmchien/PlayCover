@@ -47,6 +47,9 @@ struct AppSettingsData: Codable {
     var checkMicPermissionSync = false
     var limitMotionUpdateFrequency = false
     var disableBuiltinMouse = false
+    // Hide built-in keyboard from the injected app so macOS keyboard-as-controller emulation
+    // doesn't kick the game back to touch UI (mirrors disableBuiltinMouse).
+    var disableBuiltinKeyboard = false
     var resizableAspectRatioType = 0
     var resizableAspectRatioWidth = 0
     var resizableAspectRatioHeight = 0
@@ -89,6 +92,8 @@ struct AppSettingsData: Codable {
         limitMotionUpdateFrequency = try container.decodeIfPresent(Bool.self,
                                                                    forKey: .limitMotionUpdateFrequency) ?? false
         disableBuiltinMouse = try container.decodeIfPresent(Bool.self, forKey: .disableBuiltinMouse) ?? false
+        // Decode disableBuiltinKeyboard with the same false default (mirrors disableBuiltinMouse).
+        disableBuiltinKeyboard = try container.decodeIfPresent(Bool.self, forKey: .disableBuiltinKeyboard) ?? false
         resizableAspectRatioType = try container.decodeIfPresent(Int.self, forKey: .resizableAspectRatioType) ?? 0
         resizableAspectRatioWidth = try container.decodeIfPresent(Int.self, forKey: .resizableAspectRatioWidth) ?? 0
         resizableAspectRatioHeight = try container.decodeIfPresent(Int.self, forKey: .resizableAspectRatioHeight) ?? 0

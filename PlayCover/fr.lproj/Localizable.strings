@@ -373,8 +373,10 @@
 "settings.toggle.iosFrameworks" = "Insérer forcément les frameworks iOS";
 "settings.info.alias" = "Alias :";
 "settings.toggle.enableScrollWheel.help" = "Activer la molette de défilement dans le mappage de touches";
+"settings.toggle.disableBuiltinKeyboard.help" = "Masque le clavier à l'application afin que l'émulation macOS du clavier en manette ne fasse pas revenir le jeu à l'interface tactile.";
 "settings.toggle.iosFrameworks.help" = "Ajouter les bibliothèques système iOS à l'application. Connu pour résoudre les problèmes avec certaines applications, où il est impossible de trouver le framework iOS";
 "settings.toggle.enableScrollWheel" = "Activer la molette de défilement";
+"settings.toggle.disableBuiltinKeyboard" = "Désactiver la prise en charge du clavier intégré";
 "ipaLibrary.info.notAvailable" = "Lien invalide pour cette application";
 "ipaLibrary.info" = "Infos sur l'application";
 "ipaLibrary.info.checksum.none" = "Aucun fourni";

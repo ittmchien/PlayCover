@@ -373,8 +373,10 @@
 "settings.toggle.iosFrameworks" = "強制的にiOS Frameworkを追加";
 "settings.info.alias" = "エイリアス:";
 "settings.toggle.enableScrollWheel.help" = "キーマップ内でスクロールホイールを有効化";
+"settings.toggle.disableBuiltinKeyboard.help" = "macOSのキーボードをコントローラーとして扱うエミュレーションでゲームがタッチUIに戻らないよう、アプリからキーボードを隠します。";
 "settings.toggle.iosFrameworks.help" = "iOSのシステムライブラリをアプリに追加します。一部のアプリでiOS Frameworkが見つからない問題を修正します";
 "settings.toggle.enableScrollWheel" = "スクロールホイールを有効化";
+"settings.toggle.disableBuiltinKeyboard" = "内蔵キーボードサポートを無効化";
 "ipaLibrary.info.notAvailable" = "リンクが無効です";
 "ipaLibrary.info" = "アプリ情報";
 "ipaLibrary.info.checksum.none" = "提供されていません";

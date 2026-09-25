@@ -373,8 +373,10 @@
 "settings.toggle.iosFrameworks" = "Принудительно вставить фреймворки iOS";
 "settings.info.alias" = "Псевдоним:";
 "settings.toggle.enableScrollWheel.help" = "Включить колесо прокрутки в настройках клавиш";
+"settings.toggle.disableBuiltinKeyboard.help" = "Скрывает клавиатуру от приложения, чтобы эмуляция клавиатуры как контроллера в macOS не переключала игру обратно на сенсорный интерфейс.";
 "settings.toggle.iosFrameworks.help" = "Добавляет системные библиотеки iOS в приложение. Известно, что это решает проблемы с тем, что некоторые приложения не могут найти фреймворк iOS";
 "settings.toggle.enableScrollWheel" = "Включить колесо прокрутки";
+"settings.toggle.disableBuiltinKeyboard" = "Отключить встроенную поддержку клавиатуры";
 "ipaLibrary.info.notAvailable" = "Ссылка недействительна для этого приложения";
 "ipaLibrary.info" = "Информация о приложении";
 "ipaLibrary.info.checksum.none" = "Не предоставлено";

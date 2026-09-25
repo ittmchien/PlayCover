@@ -136,6 +136,8 @@
 "settings.toggle.autoKM.help" = "Disabilita automaticamente la mappatura dei tasti quando viene rilevata l'input di testo";
 "settings.toggle.enableScrollWheel" = "Abilita la rotella del mouse";
 "settings.toggle.enableScrollWheel.help" = "Abilita la rotella del mouse nella mappatura dei tasti";
+"settings.toggle.disableBuiltinKeyboard" = "Disabilita il supporto tastiera integrato";
+"settings.toggle.disableBuiltinKeyboard.help" = "Nasconde la tastiera all'app in modo che l'emulazione macOS della tastiera come controller non faccia tornare il gioco all'interfaccia touch.";
 "settings.tab.graphics" = "Grafica";
 "settings.picker.iosDevice" = "Dispositivo iOS:";
 "settings.picker.adaptiveRes" = "Risoluzione:";

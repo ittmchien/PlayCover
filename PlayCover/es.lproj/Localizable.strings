@@ -373,8 +373,10 @@
 "settings.toggle.iosFrameworks" = "Forzar la inserción de marcos iOS";
 "settings.info.alias" = "Alias:";
 "settings.toggle.enableScrollWheel.help" = "Activar la rueda de desplazamiento en la asignación de teclas";
+"settings.toggle.disableBuiltinKeyboard.help" = "Oculta el teclado de la app para que la emulación de macOS de teclado como mando no haga que el juego vuelva a la interfaz táctil.";
 "settings.toggle.iosFrameworks.help" = "Agregue las bibliotecas del sistema ios a la aplicación. Se sabe que soluciona problemas en los que algunas aplicaciones no pueden encontrar el marco de iOS";
 "settings.toggle.enableScrollWheel" = "Activar rueda de desplazamiento";
+"settings.toggle.disableBuiltinKeyboard" = "Desactivar el soporte de teclado integrado";
 "ipaLibrary.info" = "Información de la aplicación";
 "ipaLibrary.info.notAvailable" = "Enlace no válido para esta aplicación";
 "ipaLibrary.info.checksum.none" = "No se proporciona";

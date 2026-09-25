@@ -373,8 +373,10 @@
 "settings.toggle.iosFrameworks" = "Force Insert iOS Frameworks";
 "settings.info.alias" = "Alias:";
 "settings.toggle.enableScrollWheel.help" = "Enable scroll wheel in keymapping";
+"settings.toggle.disableBuiltinKeyboard.help" = "Hide the keyboard from the app so macOS keyboard-as-controller emulation does not switch the game back to touch UI.";
 "settings.toggle.iosFrameworks.help" = "Add the system ios libraries to the app. Known to fix issues with some apps cannot find ios framework";
 "settings.toggle.enableScrollWheel" = "Enable Scroll Wheel";
+"settings.toggle.disableBuiltinKeyboard" = "Disable Built-in Keyboard Support";
 "ipaLibrary.info.checksum.none" = "None provided";
 "ipaLibrary.info.itunes" = "ITunes Lookup:";
 "ipaLibrary.info.checksum" = "Checksum:";
