@@ -2,8 +2,11 @@
 # Build PlayCover + PlayTools from source without Apple signing certs.
 #
 # Usage: scripts/build-local.sh [--install] [--package]
-#   --install  Replace /Applications/PlayCover.app (an official copy is kept at build/PlayCover.previous.app)
+# By default the app is built and packaged (no install).
+#   --install  Install instead: replace /Applications/PlayCover.app (an official copy is kept at
+#              build/PlayCover.previous.app); skips packaging unless --package is also given
 #   --package  Create build/PlayCover-<version>-<git sha>.zip and .dmg of the built app for sharing
+#              (the default; only needed alongside --install)
 #
 # Env vars:
 #   PLAYTOOLS_DIR  Local PlayTools clone to build (default: PlayTools next to this repo).
@@ -27,6 +30,8 @@ for arg in "$@"; do
     *) usage; exit 1 ;;
   esac
 done
+# Package by default; installing is opt-in and replaces packaging unless --package is also given.
+[[ "$INSTALL" -eq 1 ]] || PACKAGE=1
 
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
