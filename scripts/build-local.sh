@@ -5,7 +5,7 @@
 #   --install  Replace /Applications/PlayCover.app (an official copy is kept at build/PlayCover.previous.app)
 #
 # Env vars:
-#   PLAYTOOLS_DIR  Local PlayTools clone to build (default: ~/PlayTools).
+#   PLAYTOOLS_DIR  Local PlayTools clone to build (default: ~/github/PlayTools).
 #   DEVELOPER_DIR  Xcode developer dir (default: /Applications/Xcode.app/Contents/Developer)
 #
 # Note: PlayTools is built directly via xcodebuild, not carthage -- Carthage
@@ -25,7 +25,7 @@ esac
 
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
-PLAYTOOLS_DIR="${PLAYTOOLS_DIR:-$HOME/PlayTools}"
+PLAYTOOLS_DIR="${PLAYTOOLS_DIR:-$HOME/github/PlayTools}"
 # Skip SwiftLint/Carthage run-script phases in both projects (same switch upstream CI uses).
 export FASTLANE=1
 
