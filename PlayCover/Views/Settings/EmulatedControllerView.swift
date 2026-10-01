@@ -27,6 +27,7 @@ enum EmulatedControllerGroup: CaseIterable {
 // Controller emulation mapping: "Controller" settings tab editing the emulated controller key layout
 struct EmulatedControllerView: View {
     @StateObject private var viewModel: EmulatedControllerVM
+    @State private var isConfirmingReset = false
 
     init(bundleIdentifier: String) {
         _viewModel = StateObject(wrappedValue: EmulatedControllerVM(bundleIdentifier: bundleIdentifier))
@@ -41,6 +42,11 @@ struct EmulatedControllerView: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
+                // An enabled layout without keys leaves the keyboard unable to control the game
+                if viewModel.isEnabled && viewModel.mapping.buttons.isEmpty {
+                    Label("settings.controller.noKeysWarning", systemImage: "exclamationmark.triangle.fill")
+                        .foregroundColor(.orange)
+                }
                 Group {
                     ForEach(EmulatedControllerGroup.allCases, id: \.self) { group in
                         inputGroup(group, keysByInput: keysByInput)
@@ -57,16 +63,33 @@ struct EmulatedControllerView: View {
         }
     }
 
+    // Controller emulation mapping: reset asks for confirmation; skipped extras are listed below the buttons
     private var actionButtons: some View {
-        HStack {
-            Button("settings.controller.resetDefault") {
+        VStack(alignment: .leading, spacing: 2) {
+            HStack {
+                Button("settings.controller.resetDefault") {
+                    viewModel.stopRecording()
+                    isConfirmingReset = true
+                }
+                Button("settings.controller.addExtras") {
+                    viewModel.addSuggestedExtras()
+                }
+                .help("settings.controller.addExtras.help")
+                Spacer()
+            }
+            if let actionHint = viewModel.hintText(for: nil) {
+                Text(actionHint)
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+        }
+        .alert("settings.controller.resetConfirm.title", isPresented: $isConfirmingReset) {
+            Button("settings.controller.resetConfirm.reset", role: .destructive) {
                 viewModel.resetToAppleDefault()
             }
-            Button("settings.controller.addExtras") {
-                viewModel.addSuggestedExtras()
-            }
-            .help("settings.controller.addExtras.help")
-            Spacer()
+            Button("button.Cancel", role: .cancel) {}
+        } message: {
+            Text("settings.controller.resetConfirm.message")
         }
     }
 
@@ -93,7 +116,7 @@ struct EmulatedControllerView: View {
                     EmulatedControllerRow(input: input,
                                           keys: keysByInput[input] ?? [],
                                           isRecording: viewModel.recordingInput == input,
-                                          hint: viewModel.hint?.input == input ? viewModel.hint?.text : nil,
+                                          hint: viewModel.hintText(for: input),
                                           onRecord: { viewModel.toggleRecording(for: input) },
                                           onRemove: { key in viewModel.removeKey(key) })
                 }

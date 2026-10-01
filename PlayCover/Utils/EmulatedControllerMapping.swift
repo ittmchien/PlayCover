@@ -82,8 +82,18 @@ struct EmulatedControllerMapping: Equatable {
         buttons = Self.appleDefaultButtons
     }
 
-    mutating func addSuggestedExtras() {
-        buttons.merge(Self.suggestedExtraButtons) { _, extra in extra }
+    // Controller emulation mapping: add only extras whose key is free; returns the skipped (already used) keys
+    @discardableResult
+    mutating func addSuggestedExtras() -> [Int] {
+        var skippedKeys: [Int] = []
+        for (key, input) in Self.suggestedExtraButtons {
+            if let currentInput = buttons[key], currentInput != input {
+                skippedKeys.append(key)
+            } else {
+                buttons[key] = input
+            }
+        }
+        return skippedKeys.sorted()
     }
 }
 
@@ -182,8 +192,17 @@ extension EmulatedControllerMapping {
 
         mapping.resetToAppleDefault()
         assert(mapping.buttons == appleDefaultButtons)
-        mapping.addSuggestedExtras()
+        let skippedOnDefault = mapping.addSuggestedExtras()
+        assert(skippedOnDefault.isEmpty)
         assert(mapping.keysByInput[.options] == [6])
+
+        // Extras never steal a key the user moved elsewhere
+        let zKey = 29
+        mapping.assign(key: zKey, to: .buttonA)
+        let skippedOnCustom = mapping.addSuggestedExtras()
+        assert(skippedOnCustom == [zKey])
+        assert(mapping.buttons[zKey] == .buttonA)
+        assert(mapping.keysByInput[.leftStickButton] == nil)
 
         mapping.isEnabled = false
         do {

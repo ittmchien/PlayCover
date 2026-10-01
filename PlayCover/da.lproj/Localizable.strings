@@ -309,3 +309,8 @@
 "settings.controller.resetDefault" = "Reset to Apple default";
 "settings.controller.addExtras" = "Add suggested extras";
 "settings.controller.addExtras.help" = "Z → L3, X → R3, C → Options, V → Home";
+"settings.controller.extrasSkipped" = "Skipped (already used): %@";
+"settings.controller.noKeysWarning" = "No keys assigned — the keyboard won't control the game";
+"settings.controller.resetConfirm.title" = "Reset to Apple default?";
+"settings.controller.resetConfirm.message" = "Your custom key layout for this app will be replaced.";
+"settings.controller.resetConfirm.reset" = "Reset";

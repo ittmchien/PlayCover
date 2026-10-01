@@ -8,10 +8,10 @@ import Foundation
 
 // Controller emulation mapping: edits one app's key layout file and records keys for an input row
 final class EmulatedControllerVM: ObservableObject {
-    // Controller emulation mapping: transient inline message shown under one input row
+    // Controller emulation mapping: transient inline message under one input row (nil input = action buttons)
     struct RowHint: Equatable {
         let id = UUID()
-        let input: EmulatedControllerInput
+        let input: EmulatedControllerInput?
         let text: String
     }
 
@@ -76,9 +76,20 @@ final class EmulatedControllerVM: ObservableObject {
         mapping.resetToAppleDefault()
     }
 
+    // Controller emulation mapping: add free extras and list the ones skipped because their key is in use
     func addSuggestedExtras() {
         stopRecording()
-        mapping.addSuggestedExtras()
+        let skippedKeys = mapping.addSuggestedExtras()
+        guard !skippedKeys.isEmpty else { return }
+        let keyNames = skippedKeys.map { KeyCodeNames.displayName(forHIDUsage: $0) }.joined(separator: ", ")
+        let format = NSLocalizedString("settings.controller.extrasSkipped", comment: "")
+        showHint(String(format: format, keyNames), for: nil)
+    }
+
+    // Controller emulation mapping: hint text for a row, or for the action buttons when input is nil
+    func hintText(for input: EmulatedControllerInput?) -> String? {
+        guard let hint, hint.input == input else { return nil }
+        return hint.text
     }
 
     // Controller emulation mapping: start recording for a row, or cancel when it is already recording
@@ -136,7 +147,7 @@ final class EmulatedControllerVM: ObservableObject {
         showHint(String(format: format, NSLocalizedString(movedFrom.localizationKey, comment: "")), for: input)
     }
 
-    private func showHint(_ text: String, for input: EmulatedControllerInput) {
+    private func showHint(_ text: String, for input: EmulatedControllerInput?) {
         let newHint = RowHint(input: input, text: text)
         hint = newHint
         DispatchQueue.main.asyncAfter(deadline: .now() + Self.hintDuration) { [weak self] in
