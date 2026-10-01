@@ -1,31 +1,36 @@
 #!/usr/bin/env bash
 # Build PlayCover + PlayTools from source without Apple signing certs.
 #
-# Usage: scripts/build-local.sh [--install]
+# Usage: scripts/build-local.sh [--install] [--package]
 #   --install  Replace /Applications/PlayCover.app (an official copy is kept at build/PlayCover.previous.app)
+#   --package  Create build/PlayCover-<version>-<git sha>.zip and .dmg of the built app for sharing
 #
 # Env vars:
-#   PLAYTOOLS_DIR  Local PlayTools clone to build (default: ~/github/PlayTools).
+#   PLAYTOOLS_DIR  Local PlayTools clone to build (default: PlayTools next to this repo).
 #   DEVELOPER_DIR  Xcode developer dir (default: /Applications/Xcode.app/Contents/Developer)
 #
 # Note: PlayTools is built directly via xcodebuild, not carthage -- Carthage
 # 0.40 + Xcode 26.5 finishes silently with an empty Carthage/Build.
-# Note: the build is ad-hoc signed, so it only runs on this Mac.
+# Note: the build is ad-hoc signed and not notarized; other Apple Silicon Macs
+# must clear the quarantine attribute before launching it.
 set -euo pipefail
 
-usage() { echo "Usage: $0 [--install]" >&2; }
+usage() { echo "Usage: $0 [--install] [--package]" >&2; }
 
+# Parse all args up front so a bad one fails before any build work starts.
 INSTALL=0
-if [[ $# -gt 1 ]]; then usage; exit 1; fi
-case "${1:-}" in
-  "") ;;
-  --install) INSTALL=1 ;;
-  *) usage; exit 1 ;;
-esac
+PACKAGE=0
+for arg in "$@"; do
+  case "$arg" in
+    --install) INSTALL=1 ;;
+    --package) PACKAGE=1 ;;
+    *) usage; exit 1 ;;
+  esac
+done
 
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 export DEVELOPER_DIR="${DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
-PLAYTOOLS_DIR="${PLAYTOOLS_DIR:-$HOME/github/PlayTools}"
+PLAYTOOLS_DIR="${PLAYTOOLS_DIR:-$(dirname "$PWD")/PlayTools}"
 # Skip SwiftLint/Carthage run-script phases in both projects (same switch upstream CI uses).
 export FASTLANE=1
 
@@ -83,6 +88,20 @@ run_logged build/xcodebuild.log "Build failed. Full log: build/xcodebuild.log" \
 APP_PATH="build/DerivedData/Build/Products/Release/PlayCover.app"
 codesign --verify --deep --strict "$APP_PATH" || echo "warning: codesign verify failed (expected for ad-hoc builds)" >&2
 echo "==> Built: $PWD/$APP_PATH"
+
+# Zip + dmg for sharing; the version is read from the built app, plus the git sha to tell builds apart.
+if [[ "$PACKAGE" -eq 1 ]]; then
+  version="$(/usr/libexec/PlistBuddy -c "Print :CFBundleShortVersionString" "$APP_PATH/Contents/Info.plist")-$(git rev-parse --short HEAD)"
+  zip_path="build/PlayCover-$version.zip"
+  dmg_path="build/PlayCover-$version.dmg"
+  echo "==> Packaging PlayCover $version"
+  rm -f "$zip_path"
+  ditto -c -k --keepParent "$APP_PATH" "$zip_path"
+  hdiutil create -volname PlayCover -srcfolder "$APP_PATH" -ov -format UDZO "$dmg_path" >/dev/null
+  echo "==> Packaged: $PWD/$zip_path"
+  echo "==> Packaged: $PWD/$dmg_path"
+  echo "On the receiving Mac: drag to /Applications, then run: xattr -dr com.apple.quarantine /Applications/PlayCover.app"
+fi
 
 if [[ "$INSTALL" -eq 0 ]]; then
   echo "To install: scripts/build-local.sh --install"
