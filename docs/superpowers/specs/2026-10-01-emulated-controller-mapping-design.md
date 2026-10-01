@@ -102,9 +102,14 @@ hook in `NSObject+Swizzle.m`.
     logged.
 - Live reload: `DispatchSource` vnode watcher on the `EmulatedController` directory (PlayCover's
   atomic writes replace the file, so watch the directory). On change (debounced ~200 ms) re-read
-  the file and call the original `remapControlsWith:` with the merged dictionary on every
-  controller in `GCController.controllers()` that is a `GCKeyboardAndMouseEmulatedController`;
-  then refresh the overlay.
+  the file and, on every controller in `GCController.controllers()` that is a
+  `GCKeyboardAndMouseEmulatedController`, set ivar `_mapping` to the merged dictionary
+  (`object_setIvarWithStrongDefault`, after checking the ivar exists with type `@`) and call
+  `-setupButtons`, which only does `_buttons = _mapping[@"Buttons"]`. Do NOT call
+  `remapControlsWith:` again: it also creates a new timer queue and starts new left-stick /
+  mouse-idle timers, so a second call would leave the old timers running. Then refresh the overlay.
+- Late install: if the hook is installed after Apple's startup call (missed it), read the
+  controller's current `_mapping` ivar as `appleDefaults` and apply via the live-reload path.
 - Unchanged: `disableBuiltinKeyboard` hooks (emulation still works with them on — verified).
 
 ## PlayTools: overlay
@@ -112,7 +117,8 @@ hook in `NSObject+Swizzle.m`.
 `PlayTools/Controls/EmulatedController/Overlay/` — one model + three views.
 
 - Model: list of `(input, [keyNames])` built from the merged `Buttons` (HID → display name via
-  `KeyCodeNames.keyCodes`), plus the fixed mouse/Esc rows.
+  `KeyCodeNames.keyCodes`), plus the fixed mouse/Esc rows. With `Enabled = false` the overlay
+  shows Apple's active layout; `Overlay` settings apply regardless of `Enabled`.
 - Container: full-screen passive `UIView` on `screen.keyWindow.rootViewController.view`
   (`isUserInteractionEnabled = false`, brought to front), same approach as `DebugController`.
   `alpha = Opacity`. Hidden at launch.
