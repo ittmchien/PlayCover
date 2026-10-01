@@ -41,6 +41,57 @@ export FASTLANE=1
 
 mkdir -p build
 
+# Preflight: collect every problem first, then print them all with fix hints and exit once.
+echo "==> Preflight"
+problems=()
+fail() { problems+=("$1 — $2"); }
+
+# DerivedData embeds absolute paths; a moved repo breaks incremental builds, so clear it (not an error).
+if [[ -d build/DerivedData && "$(cat build/.repo-path 2>/dev/null || true)" != "$PWD" ]]; then
+  rm -rf build/DerivedData build/PlayTools-DD
+  echo "==> Repo moved; cleared stale DerivedData"
+fi
+echo "$PWD" > build/.repo-path
+
+# PlayCover/PlayTools target Apple Silicon.
+[[ "$(uname -m)" == arm64 ]] || fail "not an Apple Silicon Mac (uname -m: $(uname -m))" "build on an arm64 Mac"
+
+# Full Xcode is required; the SDK and first-launch checks only make sense once it runs.
+xcodebuild_bin="$DEVELOPER_DIR/usr/bin/xcodebuild"
+if [[ -d "$DEVELOPER_DIR" ]] && "$xcodebuild_bin" -version >/dev/null 2>&1; then
+  "$xcodebuild_bin" -checkFirstLaunchStatus >/dev/null 2>&1 \
+    || fail "Xcode first launch / license not completed" "run: sudo xcodebuild -runFirstLaunch (and sudo xcodebuild -license accept)"
+  # Capture first: `xcodebuild | grep -q` under pipefail fails on SIGPIPE.
+  sdks="$("$xcodebuild_bin" -showsdks 2>/dev/null || true)"
+  [[ "$sdks" == *iphoneos* ]] \
+    || fail "iOS platform SDK not installed" "install the iOS platform in Xcode -> Settings -> Components"
+else
+  xcode_hint="install Xcode from the App Store or set DEVELOPER_DIR=/path/to/Xcode.app/Contents/Developer"
+  if [[ "$DEVELOPER_DIR" == /Library/Developer/CommandLineTools* ]]; then
+    xcode_hint="$xcode_hint (Command Line Tools alone are not enough)"
+  fi
+  fail "Xcode not usable at DEVELOPER_DIR=$DEVELOPER_DIR" "$xcode_hint"
+fi
+
+git -C "$PLAYTOOLS_DIR" rev-parse --git-dir >/dev/null 2>&1 \
+  || fail "PlayTools git clone not found at $PLAYTOOLS_DIR" "git clone https://github.com/PlayCover/PlayTools.git next to this repo, or set PLAYTOOLS_DIR"
+
+# Tools used later; hdiutil and PlistBuddy are only needed when packaging.
+required_tools=(git ditto codesign)
+[[ "$PACKAGE" -eq 0 ]] || required_tools+=(hdiutil)
+for tool in "${required_tools[@]}"; do
+  command -v "$tool" >/dev/null || fail "missing tool: $tool" "install Xcode Command Line Tools: xcode-select --install"
+done
+if [[ "$PACKAGE" -eq 1 && ! -x /usr/libexec/PlistBuddy ]]; then
+  fail "missing /usr/libexec/PlistBuddy" "it ships with macOS; check the system install"
+fi
+
+if [[ "${#problems[@]}" -gt 0 ]]; then
+  for problem in "${problems[@]}"; do echo "  ✗ $problem" >&2; done
+  exit 1
+fi
+echo "  ✓ all checks passed"
+
 # Run a build command, logging its output; on failure print the log tail + message and exit.
 run_logged() {
   local logfile="$1" message="$2"; shift 2
@@ -53,10 +104,6 @@ run_logged() {
   fi
 }
 
-if [[ ! -d "$PLAYTOOLS_DIR" ]]; then
-  echo "PlayTools source not found at $PLAYTOOLS_DIR. Clone it: git clone https://github.com/PlayCover/PlayTools.git \"$PLAYTOOLS_DIR\"" >&2
-  exit 1
-fi
 echo "==> Using local PlayTools: $PLAYTOOLS_DIR @ $(git -C "$PLAYTOOLS_DIR" rev-parse --short HEAD)"
 if [[ -n "$(git -C "$PLAYTOOLS_DIR" status --porcelain)" ]]; then
   echo "    (dirty: building uncommitted changes)"
