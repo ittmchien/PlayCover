@@ -320,3 +320,7 @@
 "settings.controller.resetConfirm.title" = "Reset to Apple default?";
 "settings.controller.resetConfirm.message" = "Your custom key layout for this app will be replaced.";
 "settings.controller.resetConfirm.reset" = "Reset";
+
+// Per-app toggle to keep the game running on other desktops (keepRunningInBackground).
+"settings.toggle.keepRunningInBackground" = "Keep running on other desktops";
+"settings.toggle.keepRunningInBackground.help" = "Keep the game running when its window is on another desktop instead of pausing it. Uses more battery. Restart the game to apply.";

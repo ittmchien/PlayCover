@@ -774,6 +774,13 @@ struct MiscView: View {
                         .help("settings.toggle.ignoreUnityKeyboardInitializationError.help")
                     Spacer()
                 }
+                // Toggle for keepRunningInBackground (PlayTools keeps the game alive on other desktops).
+                HStack {
+                    Toggle("settings.toggle.keepRunningInBackground", isOn: $settings.settings.keepRunningInBackground)
+                        .disabled(!(hasPlayTools ?? true))
+                        .help("settings.toggle.keepRunningInBackground.help")
+                    Spacer()
+                }
                 CustomDylibView(app: app,
                                 showCustomPluginWarning: $showCustomPluginWarning,
                                 hasShownCustomPluginWarning: $hasShownCustomPluginWarning,
