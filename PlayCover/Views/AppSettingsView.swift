@@ -81,6 +81,12 @@ struct AppSettingsView: View {
                         Text("settings.tab.km")
                     }
                     .disabled(!(hasPlayTools ?? true))
+                // Controller emulation mapping: per-app emulated controller key layout
+                EmulatedControllerView(bundleIdentifier: viewModel.app.info.bundleIdentifier)
+                    .tabItem {
+                        Text("settings.tab.controller")
+                    }
+                    .disabled(!(hasPlayTools ?? true))
                 GraphicsView(settings: $viewModel.settings)
                     .tabItem {
                         Text("settings.tab.graphics")

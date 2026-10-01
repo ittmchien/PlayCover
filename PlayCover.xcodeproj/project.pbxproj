@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		342787552E787EBB003A3C2F /* Keymapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 342787542E787EB9003A3C2F /* Keymapping.swift */; };
+		656F5EEFEF5DEDCC6C766813 /* EmulatedControllerMapping.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BEE537CCE0143942AB7CC43 /* EmulatedControllerMapping.swift */; };
 		3447B5E52E28B46800FAA22F /* KeymapViewVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3447B5E42E28B46800FAA22F /* KeymapViewVM.swift */; };
 		34775E752D493B59001586C2 /* CachedAsyncImageWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34775E742D493B54001586C2 /* CachedAsyncImageWrapper.swift */; };
 		349915332F8866A3005565D1 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 349915322F8866A3005565D1 /* AppIcon.icon */; };
@@ -76,9 +77,11 @@
 		ABBC85B92B7C5CBA00DCF223 /* ModifierKeyObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABBC85B82B7C5CBA00DCF223 /* ModifierKeyObserver.swift */; };
 		ABDAD80629893CF900DC164F /* KeyCoverSetupViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABDAD80529893CF900DC164F /* KeyCoverSetupViews.swift */; };
 		ABDAD80A29893EA300DC164F /* KeyCoverSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABDAD80929893EA300DC164F /* KeyCoverSettings.swift */; };
+		581AAAC97C33F7043A308F41 /* EmulatedControllerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A3438D0A7F58DD326EABD5B /* EmulatedControllerView.swift */; };
 		ABDAD80C298A1E3E00DC164F /* KeyCoverViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABDAD80B298A1E3E00DC164F /* KeyCoverViews.swift */; };
 		ABED59832887A32F004D782B /* MenuBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABED59822887A32F004D782B /* MenuBarView.swift */; };
 		B1084E1F28AA80F400E399FA /* AppSettingsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1084E1E28AA80F400E399FA /* AppSettingsVM.swift */; };
+		19F29C45D434CF4AE599AFCD /* EmulatedControllerVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FF2B06C0CEC529E0D903D81 /* EmulatedControllerVM.swift */; };
 		B1419FB628BA82EE000CB69F /* DiscordActivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1419FB528BA82EE000CB69F /* DiscordActivity.swift */; };
 		B17FD03C28C70C2100B1D4CA /* CoreUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B17FD03828C70BAE00B1D4CA /* CoreUI.framework */; };
 		B17FD04728C7B0D900B1D4CA /* AssetsExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17FD04628C7B0D900B1D4CA /* AssetsExtractor.swift */; };
@@ -99,6 +102,7 @@
 
 /* Begin PBXFileReference section */
 		342787542E787EB9003A3C2F /* Keymapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keymapping.swift; sourceTree = "<group>"; };
+		4BEE537CCE0143942AB7CC43 /* EmulatedControllerMapping.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmulatedControllerMapping.swift; sourceTree = "<group>"; };
 		3447B5E42E28B46800FAA22F /* KeymapViewVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeymapViewVM.swift; sourceTree = "<group>"; };
 		34775E742D493B54001586C2 /* CachedAsyncImageWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedAsyncImageWrapper.swift; sourceTree = "<group>"; };
 		349915322F8866A3005565D1 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
@@ -186,10 +190,12 @@
 		ABBC85B82B7C5CBA00DCF223 /* ModifierKeyObserver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModifierKeyObserver.swift; sourceTree = "<group>"; };
 		ABDAD80529893CF900DC164F /* KeyCoverSetupViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCoverSetupViews.swift; sourceTree = "<group>"; };
 		ABDAD80929893EA300DC164F /* KeyCoverSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCoverSettings.swift; sourceTree = "<group>"; };
+		3A3438D0A7F58DD326EABD5B /* EmulatedControllerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmulatedControllerView.swift; sourceTree = "<group>"; };
 		ABDAD80B298A1E3E00DC164F /* KeyCoverViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyCoverViews.swift; sourceTree = "<group>"; };
 		ABED59822887A32F004D782B /* MenuBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		ABF0BA1A285F9ED200FC5259 /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		B1084E1E28AA80F400E399FA /* AppSettingsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsVM.swift; sourceTree = "<group>"; };
+		0FF2B06C0CEC529E0D903D81 /* EmulatedControllerVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmulatedControllerVM.swift; sourceTree = "<group>"; };
 		B1419FB528BA82EE000CB69F /* DiscordActivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiscordActivity.swift; sourceTree = "<group>"; };
 		B17FD03828C70BAE00B1D4CA /* CoreUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreUI.framework; path = /System/Library/PrivateFrameworks/CoreUI.framework; sourceTree = "<group>"; };
 		B17FD03F28C70C7300B1D4CA /* CoreUI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CoreUI.h; sourceTree = "<group>"; };
@@ -237,6 +243,7 @@
 				6ED6379C28DAAAC100B506FA /* IPASourceSettings.swift */,
 				B6825C3428F3D23600E3015A /* InstallSettings.swift */,
 				ABDAD80929893EA300DC164F /* KeyCoverSettings.swift */,
+				3A3438D0A7F58DD326EABD5B /* EmulatedControllerView.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -317,6 +324,7 @@
 			children = (
 				3447B5E42E28B46800FAA22F /* KeymapViewVM.swift */,
 				B1084E1E28AA80F400E399FA /* AppSettingsVM.swift */,
+				0FF2B06C0CEC529E0D903D81 /* EmulatedControllerVM.swift */,
 				9272F19C273B74C800DFBEF1 /* AppsVM.swift */,
 				6EF893D428F34CD1004AB6D9 /* NetworkVM.swift */,
 				6EE8264F28E8AB2B003935BC /* DownloadVM.swift */,
@@ -337,6 +345,7 @@
 				6E25096D297F4E95004D754C /* Extensions */,
 				B44B40362C1E315600CE2A3E /* GoogleDrive.swift */,
 				342787542E787EB9003A3C2F /* Keymapping.swift */,
+				4BEE537CCE0143942AB7CC43 /* EmulatedControllerMapping.swift */,
 				B429B2632DC204F1001FF7D9 /* VersionCheck.swift */,
 				92ECD8A4274E763700DB7AC6 /* IPA.swift */,
 				92EE06DD274EC09F002C907B /* Entitlements.swift */,
@@ -665,6 +674,7 @@
 				92A8AAC9275EFEA800D89B50 /* SystemConfig.swift in Sources */,
 				6E66B0C9289F52800099B907 /* IPALibraryView.swift in Sources */,
 				B1084E1F28AA80F400E399FA /* AppSettingsVM.swift in Sources */,
+				19F29C45D434CF4AE599AFCD /* EmulatedControllerVM.swift in Sources */,
 				6E7CA16728B4EEAE00216CD8 /* KeymapData.swift in Sources */,
 				6ED6ACA428A949A30040D234 /* AppSettingsView.swift in Sources */,
 				92EE06DA274EB009002C907B /* PlayApp.swift in Sources */,
@@ -687,10 +697,12 @@
 				92F8500A27675124005CE6BE /* AppIntegrity.swift in Sources */,
 				AAE2F78F2F725632001336C9 /* ViewExtensions.swift in Sources */,
 				342787552E787EBB003A3C2F /* Keymapping.swift in Sources */,
+				656F5EEFEF5DEDCC6C766813 /* EmulatedControllerMapping.swift in Sources */,
 				B44B40372C1E315600CE2A3E /* GoogleDrive.swift in Sources */,
 				68E48B97295704A600C39879 /* Downloader.swift in Sources */,
 				36B26B97288C724600859EFD /* UpdateSettings.swift in Sources */,
 				ABDAD80A29893EA300DC164F /* KeyCoverSettings.swift in Sources */,
+				581AAAC97C33F7043A308F41 /* EmulatedControllerView.swift in Sources */,
 				8783CFFB26B8C52D00171041 /* PlayCoverApp.swift in Sources */,
 				AB6F21EB299B7FA20078ADEC /* URLHandler.swift in Sources */,
 				6ED6379D28DAAAC100B506FA /* IPASourceSettings.swift in Sources */,
