@@ -81,6 +81,24 @@ To uninstall:
 1. Remove PlayCover using `brew uninstall --cask playcover-community`;
 2. Untap `PlayCover/playcover` with `brew untap PlayCover/playcover`.
 
+### Controller presets
+Per-app controller mappings (`<bundleId>.plist`) in `presets/EmulatedController/` ship inside PlayCover. A preset is applied automatically when its game is installed (an existing mapping is never overwritten), or on demand with **Load preset** in the app's Controller tab.
+
+To add or update a preset: map the game in its Controller tab, then
+
+```sh
+scripts/controller-presets.sh pull <bundleId>   # container -> presets/EmulatedController/<bundleId>.plist
+```
+commit `presets/EmulatedController/<bundleId>.plist` and rebuild PlayCover.
+
+#### Using a preset from another source
+- **Import…** in the app's Controller tab: pick the `.plist`; it replaces that app's layout and combos (overlay settings are kept). Any file name works.
+- Or install the file directly. It must be named `<bundleId>.plist` (the bundle id is shown in PlayCover's app settings):
+  - `scripts/controller-presets.sh install path/to/<bundleId>.plist` (lints it, backs up a different existing file as `.bak`), or
+  - copy it into `~/Library/Containers/io.playcover.PlayCover/EmulatedController/` (Finder: Go > Go to Folder).
+
+  Close that app's Controller tab first, or PlayCover may overwrite the file on its next edit. A running game picks up the new mapping live.
+
 <p align="right"><a href="#top">⬆️ Back to top️</a></p>
 
 

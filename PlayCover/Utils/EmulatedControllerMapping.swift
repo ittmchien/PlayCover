@@ -17,6 +17,9 @@ enum EmulatedControllerInput: Int, CaseIterable {
     case home, menu, options
 
     var localizationKey: String { "settings.controller.input.\(self)" }
+
+    // Controller combos: localized input name for hints and tooltips
+    var localizedName: String { NSLocalizedString(localizationKey, comment: "") }
 }
 
 // Controller emulation mapping: in-game overlay settings (edited in a later phase, preserved on rewrite)
@@ -61,6 +64,7 @@ struct EmulatedControllerMapping: Equatable {
     var isEnabled = false
     var buttons: [Int: EmulatedControllerInput] = [:]
     var overlay = EmulatedControllerOverlay()
+    var combos: [EmulatedControllerCombo] = []
 
     var keysByInput: [EmulatedControllerInput: [Int]] {
         Dictionary(grouping: buttons.sorted { $0.key < $1.key }, by: { $0.value })
@@ -80,6 +84,13 @@ struct EmulatedControllerMapping: Equatable {
 
     mutating func resetToAppleDefault() {
         buttons = Self.appleDefaultButtons
+    }
+
+    // Controller presets: take a preset or imported layout, combos and enabled state; keep this app's overlay
+    mutating func replaceKeepingOverlay(with other: EmulatedControllerMapping) {
+        let currentOverlay = overlay
+        self = other
+        overlay = currentOverlay
     }
 
     // Controller emulation mapping: add only extras whose key is free; returns the skipped (already used) keys
@@ -103,6 +114,7 @@ extension EmulatedControllerMapping: Codable {
         case isEnabled = "Enabled"
         case buttons = "Buttons"
         case overlay = "Overlay"
+        case combos = "Combos"
     }
 
     init(from decoder: Decoder) throws {
@@ -115,9 +127,18 @@ extension EmulatedControllerMapping: Codable {
             guard let usage = Int(key), let input = EmulatedControllerInput(rawValue: value) else { return nil }
             return (usage, input)
         }
+        // Controller combos: missing Combos = none; invalid entries and repeated key sets are dropped
+        let storedCombos = try container.decodeIfPresent([EmulatedControllerLossyCombo].self, forKey: .combos) ?? []
+        var seenKeySets: Set<[Int]> = []
+        let validCombos = storedCombos.compactMap(\.combo).filter { seenKeySets.insert($0.keys).inserted }
+        let droppedCount = storedCombos.count - validCombos.count
+        if droppedCount > 0 {
+            Log.shared.log("Dropped \(droppedCount) invalid controller combo(s)", isError: true)
+        }
         self.init(isEnabled: storedEnabled,
                   buttons: Dictionary(validButtons) { first, _ in first },
-                  overlay: storedOverlay)
+                  overlay: storedOverlay,
+                  combos: validCombos)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -126,6 +147,7 @@ extension EmulatedControllerMapping: Codable {
         try container.encode(isEnabled, forKey: .isEnabled)
         try container.encode(storedButtons, forKey: .buttons)
         try container.encode(overlay, forKey: .overlay)
+        try container.encode(combos, forKey: .combos)
     }
 }
 
@@ -141,16 +163,39 @@ extension EmulatedControllerOverlay {
 
 // Controller emulation mapping: file storage in PlayCover's container (EmulatedController/<bundleId>.plist)
 extension EmulatedControllerMapping {
-    static let directory = PlayTools.playCoverContainer.appendingPathComponent("EmulatedController")
+    // Controller presets: same folder name in the container and in the app bundle's Resources
+    static let folderName = "EmulatedController"
+    private static let fileExtension = "plist"
+
+    static let directory = PlayTools.playCoverContainer.appendingPathComponent(folderName)
 
     static func fileURL(bundleIdentifier: String) -> URL {
-        directory.appendingPathComponent(bundleIdentifier).appendingPathExtension("plist")
+        directory.appendingPathComponent(bundleIdentifier).appendingPathExtension(fileExtension)
     }
 
     // Returns nil when the app has no file yet or the file is unreadable
     static func load(bundleIdentifier: String) -> EmulatedControllerMapping? {
         let url = fileURL(bundleIdentifier: bundleIdentifier)
         guard FileManager.default.fileExists(atPath: url.path) else { return nil }
+        return decode(contentsOf: url)
+    }
+
+    // Controller presets: preset shipped in the app (Resources/EmulatedController/<bundleId>.plist), nil when none
+    static func bundledPreset(bundleIdentifier: String) -> EmulatedControllerMapping? {
+        guard let url = Bundle.main.url(forResource: bundleIdentifier, withExtension: fileExtension,
+                                        subdirectory: folderName) else { return nil }
+        return decode(contentsOf: url)
+    }
+
+    // Controller presets: a newly installed app gets its bundled preset, an existing mapping file is never replaced
+    static func seedBundledPresetIfNeeded(bundleIdentifier: String) {
+        guard !FileManager.default.fileExists(atPath: fileURL(bundleIdentifier: bundleIdentifier).path),
+              let preset = bundledPreset(bundleIdentifier: bundleIdentifier) else { return }
+        preset.save(bundleIdentifier: bundleIdentifier)
+    }
+
+    // Controller presets: shared decoding of container files, bundled presets and imported files; logs, nil on failure
+    static func decode(contentsOf url: URL) -> EmulatedControllerMapping? {
         do {
             return try PropertyListDecoder().decode(EmulatedControllerMapping.self, from: Data(contentsOf: url))
         } catch {
@@ -204,6 +249,16 @@ extension EmulatedControllerMapping {
         assert(mapping.buttons[zKey] == .buttonA)
         assert(mapping.keysByInput[.leftStickButton] == nil)
 
+        // Controller presets: a preset replaces layout, combos and enabled state but keeps the overlay
+        var preset = EmulatedControllerMapping.seeded
+        preset.overlay.opacity = 0.5
+        var withPreset = mapping
+        withPreset.overlay.style = "grid"
+        withPreset.replaceKeepingOverlay(with: preset)
+        assert(withPreset.buttons == preset.buttons && withPreset.isEnabled == preset.isEnabled)
+        assert(withPreset.combos == preset.combos && withPreset.overlay.style == "grid")
+        assert(withPreset.overlay.opacity == EmulatedControllerOverlay.defaultOpacity)
+
         mapping.isEnabled = false
         do {
             let data = try PropertyListEncoder().encode(mapping)
@@ -215,6 +270,7 @@ extension EmulatedControllerMapping {
         } catch {
             assertionFailure("Controller mapping round trip failed: \(error)")
         }
+        comboSelfCheck()
     }
 }
 #endif

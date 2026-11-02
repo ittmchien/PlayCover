@@ -42,6 +42,8 @@ struct EmulatedControllerView: View {
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
+                // Controller presets: usable while the layout is off, since applying one turns it on
+                presetButtons
                 // An enabled layout without keys leaves the keyboard unable to control the game
                 if viewModel.isEnabled && viewModel.mapping.buttons.isEmpty {
                     Label("settings.controller.noKeysWarning", systemImage: "exclamationmark.triangle.fill")
@@ -52,6 +54,8 @@ struct EmulatedControllerView: View {
                         inputGroup(group, keysByInput: keysByInput)
                     }
                     actionButtons
+                    // Controller combos: combos come after the input layout, disabled with it
+                    EmulatedControllerCombosSection(viewModel: viewModel)
                 }
                 .disabled(!viewModel.isEnabled)
                 fixedInputs
@@ -93,6 +97,39 @@ struct EmulatedControllerView: View {
         }
     }
 
+    // Controller presets: bundled preset (only when one exists) and file import, both confirmed before replacing
+    private var presetButtons: some View {
+        HStack {
+            if viewModel.bundledPreset != nil {
+                Button("settings.controller.loadPreset") {
+                    viewModel.requestBundledPreset()
+                }
+                .help("settings.controller.loadPreset.help")
+            }
+            Button("settings.controller.import") {
+                viewModel.requestImport()
+            }
+            .help("settings.controller.import.help")
+        }
+        .alert("settings.controller.replaceConfirm.title", isPresented: isConfirmingReplacement,
+               presenting: viewModel.replacementCandidate) { candidate in
+            Button("settings.controller.replaceConfirm.replace", role: .destructive) {
+                viewModel.applyReplacement(candidate)
+            }
+            Button("button.Cancel", role: .cancel) {}
+        } message: { _ in
+            Text("settings.controller.replaceConfirm.message")
+        }
+    }
+
+    // Controller presets: the alert is shown while a replacement waits; dismissing drops it
+    private var isConfirmingReplacement: Binding<Bool> {
+        Binding(get: { viewModel.replacementCandidate != nil },
+                set: { isPresented in
+                    if !isPresented { viewModel.replacementCandidate = nil }
+                })
+    }
+
     // Mouse and Esc behaviour stays Apple's and is shown read-only
     private var fixedInputs: some View {
         GroupBox {
@@ -112,12 +149,13 @@ struct EmulatedControllerView: View {
                             keysByInput: [EmulatedControllerInput: [Int]]) -> some View {
         GroupBox {
             VStack(alignment: .leading) {
+                // Controller combos: recording and hints are addressed by row target
                 ForEach(group.inputs, id: \.self) { input in
                     EmulatedControllerRow(input: input,
                                           keys: keysByInput[input] ?? [],
-                                          isRecording: viewModel.recordingInput == input,
-                                          hint: viewModel.hintText(for: input),
-                                          onRecord: { viewModel.toggleRecording(for: input) },
+                                          isRecording: viewModel.recordingTarget == .input(input),
+                                          hint: viewModel.hintText(for: .input(input)),
+                                          onRecord: { viewModel.toggleRecording(for: .input(input)) },
                                           onRemove: { key in viewModel.removeKey(key) })
                 }
             }
@@ -130,11 +168,9 @@ struct EmulatedControllerView: View {
 
 // Controller emulation mapping: one input row with its key chips and a record button
 struct EmulatedControllerRow: View {
-    private static let labelWidth: CGFloat = 140
-    private static let chipCornerRadius: CGFloat = 6
-    private static let chipHorizontalPadding: CGFloat = 6
-    private static let chipVerticalPadding: CGFloat = 2
-    private static let chipBackgroundOpacity = 0.2
+    // Controller combos: wide enough for the dual Xbox / PlayStation labels, shared with the combo picker
+    static let labelWidth: CGFloat = 170
+    private static let iconWidth: CGFloat = 44
 
     let input: EmulatedControllerInput
     let keys: [Int]
@@ -145,14 +181,23 @@ struct EmulatedControllerRow: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 2) {
+            // Controller combos: input icons before the label; chips and record button shared with combo rows
             HStack {
+                EmulatedControllerInputIcon(input: input)
+                    .frame(width: Self.iconWidth, alignment: .leading)
                 Text(LocalizedStringKey(input.localizationKey))
                     .frame(width: Self.labelWidth, alignment: .leading)
+                // Controller key chips: icon + full name per key
                 ForEach(keys, id: \.self) { key in
-                    keyChip(key)
+                    EmulatedControllerKeyChip(keys: [key]) {
+                        onRemove(key)
+                    }
                 }
                 Spacer()
-                recordButton
+                EmulatedControllerRecordButton(isRecording: isRecording,
+                                               recordingTitle: "settings.controller.pressKey",
+                                               recordHelp: "settings.controller.addKey",
+                                               action: onRecord)
             }
             if let hint {
                 Text(hint)
@@ -160,36 +205,5 @@ struct EmulatedControllerRow: View {
                     .foregroundColor(.secondary)
             }
         }
-    }
-
-    private var recordButton: some View {
-        let helpKey: LocalizedStringKey = isRecording
-            ? "settings.controller.cancelRecording"
-            : "settings.controller.addKey"
-        return Button(action: onRecord) {
-            if isRecording {
-                Text("settings.controller.pressKey")
-            } else {
-                Image(systemName: "plus")
-            }
-        }
-        .help(helpKey)
-    }
-
-    private func keyChip(_ key: Int) -> some View {
-        HStack(spacing: 2) {
-            Text(verbatim: KeyCodeNames.displayName(forHIDUsage: key))
-            Button {
-                onRemove(key)
-            } label: {
-                Image(systemName: "xmark.circle.fill")
-            }
-            .buttonStyle(BorderlessButtonStyle())
-            .help("settings.controller.removeKey")
-        }
-        .padding(.horizontal, Self.chipHorizontalPadding)
-        .padding(.vertical, Self.chipVerticalPadding)
-        .background(RoundedRectangle(cornerRadius: Self.chipCornerRadius)
-            .fill(Color.secondary.opacity(Self.chipBackgroundOpacity)))
     }
 }

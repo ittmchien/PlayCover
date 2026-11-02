@@ -120,6 +120,9 @@ class Installer {
                     let installedApp = PlayApp(appUrl: finalURL)
 
                     installedApp.sign()
+                    // Controller presets: a new game gets its bundled controller preset when it has no mapping yet
+                    EmulatedControllerMapping.seedBundledPresetIfNeeded(
+                        bundleIdentifier: installedApp.info.bundleIdentifier)
                 }
 
                 try ipa.removeQuarantine(finalURL)
