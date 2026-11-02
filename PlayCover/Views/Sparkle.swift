@@ -9,9 +9,33 @@
 import Sparkle
 import SwiftUI
 
+// Fork builds must never install official releases: they replace the fork and drop its extra settings.
+// A newer upstream release only tells the user to merge upstream into the fork and rebuild.
+final class ForkUpdaterDelegate: NSObject, SPUUpdaterDelegate {
+    func updater(_ updater: SPUUpdater,
+                 shouldProceedWithUpdate updateItem: SUAppcastItem,
+                 updateCheck: SPUUpdateCheck) throws {
+        let message = String(format: NSLocalizedString("updater.upstreamAvailable.message", comment: ""),
+                             updateItem.displayVersionString, updateItem.versionString)
+        // Sparkle reports the veto error itself only for user-initiated checks
+        if updateCheck == .updatesInBackground {
+            DispatchQueue.main.async {
+                let alert = NSAlert()
+                alert.messageText = NSLocalizedString("updater.upstreamAvailable.title", comment: "")
+                alert.informativeText = message
+                alert.runModal()
+            }
+        }
+        throw NSError(domain: "io.playcover.PlayCover.fork", code: 1,
+                      userInfo: [NSLocalizedDescriptionKey: message])
+    }
+}
+
 // This view model class manages Sparkle's updater and publishes when new updates are allowed to be checked
 final class UpdaterViewModel: ObservableObject {
     private let updaterController: SPUStandardUpdaterController
+    // Strong reference: the updater controller only holds its delegate weakly
+    private let updaterDelegate: ForkUpdaterDelegate
 
     @Published var canCheckForUpdates = false
 
@@ -26,10 +50,11 @@ final class UpdaterViewModel: ObservableObject {
 
     init() {
         // If you want to start the updater manually, pass false to startingUpdater and call .startUpdater() later
-        // This is where you can also pass an updater delegate if you need one
+        // ForkUpdaterDelegate vetoes installing official releases
+        updaterDelegate = ForkUpdaterDelegate()
         updaterController = SPUStandardUpdaterController(
             startingUpdater: true,
-            updaterDelegate: nil,
+            updaterDelegate: updaterDelegate,
             userDriverDelegate: nil)
 
         updaterController.updater.publisher(for: \.canCheckForUpdates)
