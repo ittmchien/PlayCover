@@ -45,8 +45,11 @@ class PlayTools {
         return playCoverPath
     }
 
+    // Kept so launches can await the reinstall (it deletes the framework before copying it back).
+    private(set) static var installTask: Task<Void, Never>?
+
     static func installOnSystem() {
-        Task(priority: .background) {
+        installTask = Task(priority: .background) {
             do {
                 Log.shared.log("Installing PlayTools")
 

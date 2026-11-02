@@ -61,9 +61,30 @@ class PlayApp: BaseApp {
     lazy var container = AppContainer(bundleId: info.bundleIdentifier)
 
     // MARK: - Launch
+    /// True while an instance of this app is quitting (AppKit already made it background-only).
+    /// Quitting can take up to ~42s (37.5s background-task + 4.9s willTerminate watchdogs), and
+    /// launching meanwhile makes macOS cancel the quit and revive the half-quit process.
+    var isQuitting: Bool {
+        NSRunningApplication.runningApplications(withBundleIdentifier: info.bundleIdentifier)
+            .contains { $0.activationPolicy == .prohibited }
+    }
+
     func launch() async {
+        // Block relaunch while a Cmd+Q is still in progress instead of reviving the quitting process.
+        if isQuitting {
+            await MainActor.run {
+                ToastVM.shared.showToast(toastType: .notice,
+                                         toastDetails: NSLocalizedString("playapp.stillQuitting", comment: ""))
+            }
+            return
+        }
+
         do {
             isStarting = true
+
+            // PlayTools is reinstalled in the background on every PlayCover start; wait so the
+            // isInstalled() check below does not hit the window between delete and copy.
+            await PlayTools.installTask?.value
 
             if prohibitedToPlay {
                 await clearAllCache()
