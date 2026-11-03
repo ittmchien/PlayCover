@@ -32,6 +32,8 @@
 		<integer>10</integer>
 		<key>27</key>
 		<integer>6</integer>
+		<key>28</key>
+		<integer>7</integer>
 		<key>30</key>
 		<integer>0</integer>
 		<key>31</key>
@@ -42,10 +44,18 @@
 		<integer>2</integer>
 		<key>4</key>
 		<integer>12</integer>
+		<key>40</key>
+		<integer>4</integer>
+		<key>42</key>
+		<integer>5</integer>
 		<key>43</key>
 		<integer>21</integer>
 		<key>44</key>
 		<integer>4</integer>
+		<key>53</key>
+		<integer>7</integer>
+		<key>57</key>
+		<integer>22</integer>
 		<key>6</key>
 		<integer>19</integer>
 		<key>7</key>
@@ -81,25 +91,12 @@
 		<dict>
 			<key>Inputs</key>
 			<array>
-				<integer>5</integer>
-				<integer>7</integer>
-			</array>
-			<key>Keys</key>
-			<array>
-				<integer>28</integer>
-			</array>
-			<key>Priority</key>
-			<string>Combo</string>
-		</dict>
-		<dict>
-			<key>Inputs</key>
-			<array>
+				<integer>8</integer>
 				<integer>18</integer>
-				<integer>19</integer>
 			</array>
 			<key>Keys</key>
 			<array>
-				<integer>21</integer>
+				<integer>10</integer>
 			</array>
 			<key>Priority</key>
 			<string>Combo</string>
@@ -108,11 +105,11 @@
 			<key>Inputs</key>
 			<array>
 				<integer>8</integer>
-				<integer>18</integer>
+				<integer>9</integer>
 			</array>
 			<key>Keys</key>
 			<array>
-				<integer>10</integer>
+				<integer>21</integer>
 			</array>
 			<key>Priority</key>
 			<string>Combo</string>
