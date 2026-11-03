@@ -55,8 +55,8 @@ struct AppSettingsData: Codable {
     var resizableAspectRatioHeight = 0
     var blockSleepSpamming = false
     var ignoreUnityKeyboardInitializationError = false
-    // Keep the game running (no pause/App Nap) while its window is on another desktop Space.
-    var keepRunningInBackground = false
+    // Keep the game running (no pause/App Nap) while its window is on another desktop Space; on by default.
+    var keepRunningInBackground = true
 
     init() {}
 
@@ -102,8 +102,8 @@ struct AppSettingsData: Codable {
         blockSleepSpamming = try container.decodeIfPresent(Bool.self, forKey: .blockSleepSpamming) ?? false
         ignoreUnityKeyboardInitializationError = try container.decodeIfPresent(
             Bool.self, forKey: .ignoreUnityKeyboardInitializationError) ?? false
-        // Decode keepRunningInBackground with a false default (older settings files lack the key).
-        keepRunningInBackground = try container.decodeIfPresent(Bool.self, forKey: .keepRunningInBackground) ?? false
+        // Decode keepRunningInBackground with a true default (older settings files lack the key).
+        keepRunningInBackground = try container.decodeIfPresent(Bool.self, forKey: .keepRunningInBackground) ?? true
     }
 }
 
